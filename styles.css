@@ -5,6 +5,7 @@
   --text: #eceae4;
   --muted: #8b8d92;
   --accent: #d9774a;
+  --cube-size: 320px;
 }
 *{box-sizing:border-box;}
 html, body{
@@ -40,8 +41,8 @@ body{
   z-index:-1;
 }
 .stage{
-  width: 320px;
-  height: 320px;
+  width: var(--cube-size);
+  height: var(--cube-size);
   perspective: 1600px;
   position: relative;
   z-index: 1;
@@ -68,8 +69,8 @@ body{
 
 .face{
   position:absolute;
-  width:320px;
-  height:320px;
+  width:var(--cube-size);
+  height:var(--cube-size);
   overflow:hidden;
   background:#000;
   border:1px solid rgba(255,255,255,.08);
@@ -139,12 +140,12 @@ body{
   object-fit:contain;
 }
 
-.face.front  { transform: rotateY(  0deg) translateZ(160px); }
-.face.right  { transform: rotateY( 90deg) translateZ(160px); }
-.face.back   { transform: rotateY(180deg) translateZ(160px); }
-.face.left   { transform: rotateY(-90deg) translateZ(160px); }
-.face.top    { transform: rotateX( 90deg) translateZ(160px); }
-.face.bottom { transform: rotateX(-90deg) translateZ(160px); }
+.face.front  { transform: rotateY(  0deg) translateZ(calc(var(--cube-size) / 2)); }
+.face.right  { transform: rotateY( 90deg) translateZ(calc(var(--cube-size) / 2)); }
+.face.back   { transform: rotateY(180deg) translateZ(calc(var(--cube-size) / 2)); }
+.face.left   { transform: rotateY(-90deg) translateZ(calc(var(--cube-size) / 2)); }
+.face.top    { transform: rotateX( 90deg) translateZ(calc(var(--cube-size) / 2)); }
+.face.bottom { transform: rotateX(-90deg) translateZ(calc(var(--cube-size) / 2)); }
 
 .ghosts{
   position:absolute;
@@ -154,8 +155,8 @@ body{
 .ghost-plane{
   position:absolute;
   inset:0;
-  width:320px;
-  height:320px;
+  width:var(--cube-size);
+  height:var(--cube-size);
   border:1px solid rgba(255,255,255,.15);
   background-size:cover;
   background-position:center;
@@ -228,3 +229,8 @@ footer a:hover{
   background: rgba(255,255,255,.04);
 }
 footer svg{ width:15px; height:15px; fill:currentColor; }
+
+@media (max-width: 480px){
+  :root{ --cube-size: 230px; }
+  .hero .brand{ font-size:32px; }
+}
