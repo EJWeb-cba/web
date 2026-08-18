@@ -58,6 +58,7 @@ body{
   will-change: transform;
   user-select: none;
   -webkit-user-select: none;
+  -webkit-touch-callout: none;
 }
 .cube.dragging{ cursor: grabbing; }
 .cube video,

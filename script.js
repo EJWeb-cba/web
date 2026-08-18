@@ -114,10 +114,12 @@ function onPointerDown(e){
   lastX = e.clientX; lastY = e.clientY;
   downX = e.clientX; downY = e.clientY;
   velX = 0; velY = 0;
+  e.preventDefault();
 }
 
 function onPointerMove(e){
   if(!dragging) return;
+  e.preventDefault();
   const dx = e.clientX - lastX;
   const dy = e.clientY - lastY;
   lastX = e.clientX; lastY = e.clientY;
@@ -141,8 +143,8 @@ function onPointerUp(e){
   }
 }
 
-cube.addEventListener('pointerdown', onPointerDown);
-cube.addEventListener('pointermove', onPointerMove);
+cube.addEventListener('pointerdown', onPointerDown, { passive: false });
+cube.addEventListener('pointermove', onPointerMove, { passive: false });
 cube.addEventListener('pointerup', onPointerUp);
 cube.addEventListener('pointercancel', onPointerUp);
 
