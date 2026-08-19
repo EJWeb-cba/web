@@ -238,16 +238,10 @@ footer a{ text-decoration:none; }
   width:var(--wa-size);
   height:var(--wa-size);
   transform-style: preserve-3d;
-  transform: rotateX(-26deg);
-  animation: wa-spin 6s linear infinite;
   transition: filter .2s ease;
 }
 .wa-3d:hover .wa-cube{
   filter: brightness(1.12);
-}
-@keyframes wa-spin{
-  from{ transform: rotateX(-26deg) rotateY(0deg); }
-  to{ transform: rotateX(-26deg) rotateY(360deg); }
 }
 .wa-face{
   position:absolute;

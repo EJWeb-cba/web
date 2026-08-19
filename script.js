@@ -205,6 +205,10 @@ cube.addEventListener('pointercancel', onPointerUp);
 cube.addEventListener('dragstart', e => e.preventDefault());
 
 let lastTick = 0;
+const waCube = document.querySelector('.wa-3d .wa-cube');
+let waRotY = 0;
+const WA_SPEED = 60; // grados por segundo
+
 function tick(now){
   if(!lastTick) lastTick = now;
   const dtSec = Math.min((now - lastTick) / 1000, 0.05);
@@ -227,6 +231,12 @@ function tick(now){
   }
   const speed = Math.hypot(velX, velY);
   updateGhosts(now, dtSec, speed);
+
+  if(waCube){
+    waRotY += WA_SPEED * dtSec;
+    waCube.style.transform = `rotateX(-26deg) rotateY(${waRotY}deg)`;
+  }
+
   requestAnimationFrame(tick);
 }
 requestAnimationFrame(tick);
