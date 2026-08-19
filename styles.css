@@ -216,20 +216,35 @@ footer{
 footer a{
   display:flex;
   align-items:center;
-  gap:8px;
+  gap:9px;
   color:var(--text);
   text-decoration:none;
-  font-size:13px;
-  border:1px solid rgba(255,255,255,.14);
-  padding:9px 16px;
-  border-radius:999px;
-  transition: border-color .15s ease, background .15s ease;
+  font-size:14px;
+  font-weight:600;
+  letter-spacing:.01em;
+  padding:13px 24px;
+  border-radius:12px;
+  background: linear-gradient(180deg, #202226, #17181b);
+  border:1px solid rgba(255,255,255,.09);
+  box-shadow:
+    0 4px 0 var(--accent),
+    0 4px 14px rgba(0,0,0,.4);
+  transform: translateY(0);
+  transition: transform .15s ease, box-shadow .15s ease;
 }
 footer a:hover{
-  border-color: rgba(255,255,255,.32);
-  background: rgba(255,255,255,.04);
+  transform: translateY(-3px);
+  box-shadow:
+    0 7px 0 var(--accent),
+    0 12px 22px rgba(0,0,0,.45);
 }
-footer svg{ width:15px; height:15px; fill:currentColor; }
+footer a:active{
+  transform: translateY(2px);
+  box-shadow:
+    0 2px 0 var(--accent),
+    0 2px 8px rgba(0,0,0,.3);
+}
+footer svg{ width:16px; height:16px; fill:currentColor; }
 
 @media (max-width: 480px){
   :root{ --cube-size: 230px; }
