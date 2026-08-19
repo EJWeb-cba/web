@@ -94,52 +94,103 @@ function updateGhosts(now, dtSec, speed){
   }
 }
 
-let rotX = -18, rotY = -30;
+let rotX = -18, rotY = -30, rotZ = 0;
 let dragging = false;
 let lastX = 0, lastY = 0;
-let velY = 0, velX = 0;
+let velY = 0, velX = 0, velZ = 0;
 const AUTOROTATE_SPEED = 0.06;
 const FRICTION = 0.94;
 
 function setTransform(){
-  cube.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+  cube.style.transform = `rotateZ(${rotZ}deg) rotateX(${rotX}deg) rotateY(${rotY}deg)`;
 }
 
 let downX = 0, downY = 0;
+let lastAngle = null; // ángulo entre los dos dedos, para el gesto de giro (torsión)
+const activePointers = new Map(); // pointerId -> {x, y}, soporta 1 o más dedos
+
+function getCentroid(){
+  let sx = 0, sy = 0;
+  activePointers.forEach(p => { sx += p.x; sy += p.y; });
+  const n = activePointers.size || 1;
+  return { x: sx / n, y: sy / n };
+}
+
+function getTwoFingerAngle(){
+  const pts = [...activePointers.values()];
+  if(pts.length < 2) return null;
+  const [a, b] = pts;
+  return Math.atan2(b.y - a.y, b.x - a.x) * 180 / Math.PI;
+}
 
 function onPointerDown(e){
+  cube.setPointerCapture(e.pointerId);
+  activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+  if(activePointers.size === 1){
+    downX = e.clientX; downY = e.clientY;
+  }
+  if(activePointers.size === 2){
+    lastAngle = getTwoFingerAngle();
+  }
+
   dragging = true;
   cube.classList.add('dragging');
-  cube.setPointerCapture(e.pointerId);
-  lastX = e.clientX; lastY = e.clientY;
-  downX = e.clientX; downY = e.clientY;
-  velX = 0; velY = 0;
+  const c = getCentroid();
+  lastX = c.x; lastY = c.y;
+  velX = 0; velY = 0; velZ = 0;
   e.preventDefault();
 }
 
 function onPointerMove(e){
-  if(!dragging) return;
+  if(!dragging || !activePointers.has(e.pointerId)) return;
   e.preventDefault();
-  const dx = e.clientX - lastX;
-  const dy = e.clientY - lastY;
-  lastX = e.clientX; lastY = e.clientY;
+  activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+  const c = getCentroid();
+  const dx = c.x - lastX;
+  const dy = c.y - lastY;
+  lastX = c.x; lastY = c.y;
   velY = dx * 0.4;
   velX = -dy * 0.4;
   rotY += velY;
   rotX = rotX + velX;
+
+  if(activePointers.size >= 2){
+    const angle = getTwoFingerAngle();
+    if(lastAngle !== null){
+      let delta = angle - lastAngle;
+      if(delta > 180) delta -= 360;
+      if(delta < -180) delta += 360;
+      rotZ += delta;
+      velZ = delta;
+    }
+    lastAngle = angle;
+  }
+
   setTransform();
 }
 
 function onPointerUp(e){
-  dragging = false;
-  cube.classList.remove('dragging');
+  activePointers.delete(e.pointerId);
   cube.releasePointerCapture(e.pointerId);
 
-  const moved = Math.hypot(e.clientX - downX, e.clientY - downY);
-  if(moved < 6){
-    const face = e.target.closest('.face');
-    const url = face && face.dataset.url;
-    if(url) window.open(url, '_blank', 'noopener');
+  if(activePointers.size === 0){
+    dragging = false;
+    cube.classList.remove('dragging');
+
+    const moved = Math.hypot(e.clientX - downX, e.clientY - downY);
+    if(moved < 6){
+      const face = e.target.closest('.face');
+      const url = face && face.dataset.url;
+      if(url) window.open(url, '_blank', 'noopener');
+    }
+  } else {
+    // queda al menos un dedo apoyado: recalibramos el centro acá
+    // mismo para que no salte de golpe al levantar uno de los dos
+    const c = getCentroid();
+    lastX = c.x; lastY = c.y;
+    lastAngle = null; // ya no hay 2 dedos: reiniciar base del giro
   }
 }
 
@@ -167,6 +218,10 @@ function tick(now){
       rotX = rotX + velX;
     } else {
       rotY += AUTOROTATE_SPEED;
+    }
+    if(Math.abs(velZ) > 0.01){
+      velZ *= FRICTION;
+      rotZ += velZ;
     }
     setTransform();
   }
