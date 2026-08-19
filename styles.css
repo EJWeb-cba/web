@@ -229,15 +229,16 @@ footer a{ text-decoration:none; }
 .wa-3d .wa-tilt{
   perspective: 500px;
   display:block;
+  filter: drop-shadow(0 10px 14px rgba(0,0,0,.45));
 }
 .wa-3d .wa-cube{
   --wa-size: 74px;
-  --wa-depth: 18px;
+  --wa-depth: 34px;
   position:relative;
   width:var(--wa-size);
   height:var(--wa-size);
   transform-style: preserve-3d;
-  transform: rotateX(-14deg);
+  transform: rotateX(-26deg);
   animation: wa-spin 6s linear infinite;
   transition: filter .2s ease;
 }
@@ -245,8 +246,8 @@ footer a{ text-decoration:none; }
   filter: brightness(1.12);
 }
 @keyframes wa-spin{
-  from{ transform: rotateX(-14deg) rotateY(0deg); }
-  to{ transform: rotateX(-14deg) rotateY(360deg); }
+  from{ transform: rotateX(-26deg) rotateY(0deg); }
+  to{ transform: rotateX(-26deg) rotateY(360deg); }
 }
 .wa-face{
   position:absolute;
