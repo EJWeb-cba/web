@@ -234,11 +234,11 @@ function tick(now){
 requestAnimationFrame(tick);
 
 // --- Badge 3D de WhatsApp, renderizado con Three.js (WebGL real, no CSS) ---
-(function initWhatsappBadge(){
-  const canvas = document.getElementById('wa-canvas');
+function createSpinningBadge(canvasId, iconInnerSVG, sideColorHex){
+  const canvas = document.getElementById(canvasId);
   if(!canvas || typeof THREE === 'undefined') return;
 
-  const SIZE = 74; // px de render (la sisa en pantalla la maneja el CSS)
+  const SIZE = 74; // px de render (el tamaño en pantalla lo maneja el CSS)
 
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
   renderer.setPixelRatio(window.devicePixelRatio || 1);
@@ -249,30 +249,19 @@ requestAnimationFrame(tick);
   camera.position.set(0, 0, 4.4);
   camera.lookAt(0, 0, 0);
 
-  // ícono de WhatsApp dibujado sobre fondo verde, como textura
   const svgMarkup = `
     <svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 100 100">
-      <defs>
-        <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stop-color="#34e07a"/>
-          <stop offset="1" stop-color="#1fa855"/>
-        </linearGradient>
-      </defs>
-      <rect width="100" height="100" fill="url(#g)"/>
-      <g transform="translate(20,20) scale(2.4)">
-        <path fill="#fff" d="M17.5 14.4c-.3-.15-1.77-.87-2.04-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.48-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.14-.14.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.87 1.22 3.07c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.62.71.23 1.36.2 1.87.12.57-.09 1.77-.72 2.02-1.42.25-.7.25-1.29.17-1.42-.07-.12-.27-.2-.57-.35z"/>
-        <path fill="#fff" d="M12 2C6.5 2 2 6.5 2 12c0 1.85.5 3.58 1.36 5.07L2 22l5.06-1.33A9.95 9.95 0 0 0 12 22c5.5 0 10-4.5 10-10S17.5 2 12 2zm0 18.15c-1.67 0-3.22-.5-4.52-1.36l-.32-.2-3 .79.8-2.93-.21-.3A8.14 8.14 0 0 1 3.85 12c0-4.5 3.65-8.15 8.15-8.15S20.15 7.5 20.15 12 16.5 20.15 12 20.15z"/>
-      </g>
+      ${iconInnerSVG}
     </svg>`;
   const svgBlob = new Blob([svgMarkup], { type: 'image/svg+xml;charset=utf-8' });
   const svgUrl = URL.createObjectURL(svgBlob);
 
-  // fondo verde sólido como material de arranque, mientras el ícono termina de cargar
-  const faceMaterial = new THREE.MeshPhongMaterial({ color: 0x2fbf68, shininess: 40 });
-  const sideMaterial = new THREE.MeshPhongMaterial({ color: 0x178a45, shininess: 25 });
+  // color sólido como material de arranque, mientras el ícono termina de cargar
+  const faceMaterial = new THREE.MeshPhongMaterial({ color: sideColorHex, shininess: 40 });
+  const sideMaterial = new THREE.MeshPhongMaterial({ color: sideColorHex, shininess: 25 });
 
   // dibujamos el SVG en un canvas 2D normal y de ahí sacamos la textura,
-  // en vez de pasarle el SVG directo a WebGL (eso es lo que daba negro)
+  // en vez de pasarle el SVG directo a WebGL (eso daba negro)
   const iconImg = new Image();
   iconImg.onload = function(){
     const iconCanvas = document.createElement('canvas');
@@ -313,4 +302,36 @@ requestAnimationFrame(tick);
     renderer.render(scene, camera);
   }
   animateBadge();
-})();
+}
+
+// --- WhatsApp ---
+createSpinningBadge('wa-canvas', `
+  <defs>
+    <linearGradient id="gWa" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#34e07a"/>
+      <stop offset="1" stop-color="#1fa855"/>
+    </linearGradient>
+  </defs>
+  <rect width="100" height="100" fill="url(#gWa)"/>
+  <g transform="translate(20,20) scale(2.4)">
+    <path fill="#fff" d="M17.5 14.4c-.3-.15-1.77-.87-2.04-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.48-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.14-.14.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.87 1.22 3.07c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.62.71.23 1.36.2 1.87.12.57-.09 1.77-.72 2.02-1.42.25-.7.25-1.29.17-1.42-.07-.12-.27-.2-.57-.35z"/>
+    <path fill="#fff" d="M12 2C6.5 2 2 6.5 2 12c0 1.85.5 3.58 1.36 5.07L2 22l5.06-1.33A9.95 9.95 0 0 0 12 22c5.5 0 10-4.5 10-10S17.5 2 12 2zm0 18.15c-1.67 0-3.22-.5-4.52-1.36l-.32-.2-3 .79.8-2.93-.21-.3A8.14 8.14 0 0 1 3.85 12c0-4.5 3.65-8.15 8.15-8.15S20.15 7.5 20.15 12 16.5 20.15 12 20.15z"/>
+  </g>
+`, 0x1fa855);
+
+// --- Instagram ---
+createSpinningBadge('ig-canvas', `
+  <defs>
+    <linearGradient id="gIg" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0"    stop-color="#FEDA75"/>
+      <stop offset="0.3"  stop-color="#FA7E1E"/>
+      <stop offset="0.6"  stop-color="#D62976"/>
+      <stop offset="0.85" stop-color="#962FBF"/>
+      <stop offset="1"    stop-color="#4F5BD5"/>
+    </linearGradient>
+  </defs>
+  <rect width="100" height="100" fill="url(#gIg)"/>
+  <rect x="27" y="27" width="46" height="46" rx="14" fill="none" stroke="#fff" stroke-width="6"/>
+  <circle cx="50" cy="50" r="12" fill="none" stroke="#fff" stroke-width="6"/>
+  <circle cx="66" cy="34" r="3.2" fill="#fff"/>
+`, 0xd62976);
