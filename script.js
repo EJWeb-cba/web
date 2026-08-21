@@ -251,7 +251,7 @@ requestAnimationFrame(tick);
 
   // ícono de WhatsApp dibujado sobre fondo verde, como textura
   const svgMarkup = `
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+    <svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 100 100">
       <defs>
         <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
           <stop offset="0" stop-color="#34e07a"/>
@@ -264,11 +264,31 @@ requestAnimationFrame(tick);
         <path fill="#fff" d="M12 2C6.5 2 2 6.5 2 12c0 1.85.5 3.58 1.36 5.07L2 22l5.06-1.33A9.95 9.95 0 0 0 12 22c5.5 0 10-4.5 10-10S17.5 2 12 2zm0 18.15c-1.67 0-3.22-.5-4.52-1.36l-.32-.2-3 .79.8-2.93-.21-.3A8.14 8.14 0 0 1 3.85 12c0-4.5 3.65-8.15 8.15-8.15S20.15 7.5 20.15 12 16.5 20.15 12 20.15z"/>
       </g>
     </svg>`;
-  const svgUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgMarkup);
-  const faceTexture = new THREE.TextureLoader().load(svgUrl);
+  const svgBlob = new Blob([svgMarkup], { type: 'image/svg+xml;charset=utf-8' });
+  const svgUrl = URL.createObjectURL(svgBlob);
 
-  const faceMaterial = new THREE.MeshPhongMaterial({ map: faceTexture, shininess: 40 });
+  // fondo verde sólido como material de arranque, mientras el ícono termina de cargar
+  const faceMaterial = new THREE.MeshPhongMaterial({ color: 0x2fbf68, shininess: 40 });
   const sideMaterial = new THREE.MeshPhongMaterial({ color: 0x178a45, shininess: 25 });
+
+  // dibujamos el SVG en un canvas 2D normal y de ahí sacamos la textura,
+  // en vez de pasarle el SVG directo a WebGL (eso es lo que daba negro)
+  const iconImg = new Image();
+  iconImg.onload = function(){
+    const iconCanvas = document.createElement('canvas');
+    iconCanvas.width = 256;
+    iconCanvas.height = 256;
+    const ctx = iconCanvas.getContext('2d');
+    ctx.drawImage(iconImg, 0, 0, 256, 256);
+
+    const tex = new THREE.CanvasTexture(iconCanvas);
+    tex.needsUpdate = true;
+    faceMaterial.map = tex;
+    faceMaterial.color.set(0xffffff);
+    faceMaterial.needsUpdate = true;
+    URL.revokeObjectURL(svgUrl);
+  };
+  iconImg.src = svgUrl;
 
   // orden de materiales del BoxGeometry: +x, -x, +y, -y, +z, -z
   const materials = [
