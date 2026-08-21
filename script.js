@@ -101,6 +101,16 @@ let velY = 0, velX = 0, velZ = 0;
 const AUTOROTATE_SPEED = 0.06;
 const FRICTION = 0.94;
 
+// --- sonidos ---
+const sndGrab = new Audio('sounds/agarrar.mp3');
+const sndDrop = new Audio('sounds/soltar.mp3');
+const sndHover = new Audio('sounds/hover.mp3');
+
+function playSound(audio){
+  audio.currentTime = 0;
+  audio.play().catch(() => {}); // ignora si el navegador bloquea el autoplay
+}
+
 function setTransform(){
   cube.style.transform = `rotateZ(${rotZ}deg) rotateX(${rotX}deg) rotateY(${rotY}deg)`;
 }
@@ -129,6 +139,7 @@ function onPointerDown(e){
 
   if(activePointers.size === 1){
     downX = e.clientX; downY = e.clientY;
+    playSound(sndGrab);
   }
   if(activePointers.size === 2){
     lastAngle = getTwoFingerAngle();
@@ -178,6 +189,7 @@ function onPointerUp(e){
   if(activePointers.size === 0){
     dragging = false;
     cube.classList.remove('dragging');
+    playSound(sndDrop);
 
     const moved = Math.hypot(e.clientX - downX, e.clientY - downY);
     if(moved < 6){
@@ -198,6 +210,14 @@ cube.addEventListener('pointerdown', onPointerDown, { passive: false });
 cube.addEventListener('pointermove', onPointerMove, { passive: false });
 cube.addEventListener('pointerup', onPointerUp);
 cube.addEventListener('pointercancel', onPointerUp);
+
+// sonido de hover en los botones (whatsapp/instagram), solo en desktop:
+// pointerType 'mouse' descarta que un dedo en mobile lo dispare
+document.querySelectorAll('.badge-3d').forEach(el => {
+  el.addEventListener('pointerenter', e => {
+    if(e.pointerType === 'mouse') playSound(sndHover);
+  });
+});
 
 // red de seguridad cross-browser: el -webkit-user-drag del CSS no
 // funciona en todos los navegadores, así que cancelamos el drag nativo
