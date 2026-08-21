@@ -258,7 +258,7 @@ requestAnimationFrame(tick);
           <stop offset="1" stop-color="#1fa855"/>
         </linearGradient>
       </defs>
-      <rect width="100" height="100" rx="22" fill="url(#g)"/>
+      <rect width="100" height="100" fill="url(#g)"/>
       <g transform="translate(20,20) scale(2.4)">
         <path fill="#fff" d="M17.5 14.4c-.3-.15-1.77-.87-2.04-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.48-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.14-.14.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.87 1.22 3.07c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.62.71.23 1.36.2 1.87.12.57-.09 1.77-.72 2.02-1.42.25-.7.25-1.29.17-1.42-.07-.12-.27-.2-.57-.35z"/>
         <path fill="#fff" d="M12 2C6.5 2 2 6.5 2 12c0 1.85.5 3.58 1.36 5.07L2 22l5.06-1.33A9.95 9.95 0 0 0 12 22c5.5 0 10-4.5 10-10S17.5 2 12 2zm0 18.15c-1.67 0-3.22-.5-4.52-1.36l-.32-.2-3 .79.8-2.93-.21-.3A8.14 8.14 0 0 1 3.85 12c0-4.5 3.65-8.15 8.15-8.15S20.15 7.5 20.15 12 16.5 20.15 12 20.15z"/>
@@ -290,11 +290,14 @@ requestAnimationFrame(tick);
   };
   iconImg.src = svgUrl;
 
-  // orden de grupos que genera ExtrudeGeometry: 0 = canto (los lados extruidos),
-  // 1 = las dos tapas (frente y atrás) — así que el ícono va en ambas tapas
-  const materials = [sideMaterial, faceMaterial];
+  // orden de materiales del BoxGeometry: +x, -x, +y, -y, +z, -z
+  const materials = [
+    sideMaterial, sideMaterial, // derecha, izquierda (canto)
+    sideMaterial, sideMaterial, // arriba, abajo (canto)
+    faceMaterial, faceMaterial  // frente, atrás (ícono)
+  ];
 
-  const geometry = createRoundedBoxGeometry(1.9, 1.9, 0.65, 0.3, 8);
+  const geometry = new THREE.BoxGeometry(1.9, 1.9, 0.65);
   const badge = new THREE.Mesh(geometry, materials);
   badge.rotation.x = -0.42; // inclinación fija, para que siempre se vea el canto de arriba
   scene.add(badge);
@@ -310,31 +313,4 @@ requestAnimationFrame(tick);
     renderer.render(scene, camera);
   }
   animateBadge();
-
-  // arma una "caja" con las 4 esquinas redondeadas de verdad (no una caja recta
-  // con una imagen redondeada encima), extruyendo un rectángulo redondeado 2D
-  function createRoundedBoxGeometry(width, height, depth, radius, curveSegments){
-    const x = -width / 2, y = -height / 2, w = width, h = height, r = radius;
-    const shape = new THREE.Shape();
-    shape.moveTo(x, y + r);
-    shape.lineTo(x, y + h - r);
-    shape.quadraticCurveTo(x, y + h, x + r, y + h);
-    shape.lineTo(x + w - r, y + h);
-    shape.quadraticCurveTo(x + w, y + h, x + w, y + h - r);
-    shape.lineTo(x + w, y + r);
-    shape.quadraticCurveTo(x + w, y, x + w - r, y);
-    shape.lineTo(x + r, y);
-    shape.quadraticCurveTo(x, y, x, y + r);
-
-    const geo = new THREE.ExtrudeGeometry(shape, {
-      depth: depth,
-      bevelEnabled: true,
-      bevelThickness: 0.035,
-      bevelSize: 0.035,
-      bevelSegments: 3,
-      curveSegments: curveSegments || 8
-    });
-    geo.center();
-    return geo;
-  }
 })();
