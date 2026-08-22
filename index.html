@@ -4,21 +4,43 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <title>Cubo de portafolio</title>
-<link rel="stylesheet" href="styles.css?v=6">
+<link rel="stylesheet" href="styles.css?v=14">
 </head>
 <body>
 
   <video class="bg-video" autoplay muted loop playsinline src="videos/bg-video.mp4"></video>
   <div class="bg-overlay"></div>
 
-  <div class="hero">
-    <p class="brand">EJWeb</p>
-    <p class="tagline">Diseño y creación de sitios web a medida. Cada cara del cubo es un proyecto — arrastralo para explorar.</p>
+  <nav class="topnav">
+    <a href="#inicio" class="nav-link active-link">Inicio</a>
+    <a href="#proyectos" class="nav-link">Proyectos</a>
+    <a href="#contacto" class="nav-link">Contacto</a>
+    <a href="https://wa.me/5490000000000" target="_blank" rel="noopener" class="nav-cta">Escribinos</a>
+  </nav>
+
+  <div class="ticker-wrap" aria-hidden="true">
+    <div class="ticker">
+      <span>Diseño Web</span><span class="dot"></span>
+      <span>Landing Pages</span><span class="dot"></span>
+      <span>E‑commerce</span><span class="dot"></span>
+      <span>Branding</span><span class="dot"></span>
+      <span>SEO</span><span class="dot"></span>
+      <span>Mantenimiento</span><span class="dot"></span>
+      <span>Diseño Web</span><span class="dot"></span>
+      <span>Landing Pages</span><span class="dot"></span>
+      <span>E‑commerce</span><span class="dot"></span>
+      <span>Branding</span><span class="dot"></span>
+      <span>SEO</span><span class="dot"></span>
+      <span>Mantenimiento</span><span class="dot"></span>
+    </div>
   </div>
 
-  <div class="stage">
+  <section class="hero-showcase" id="inicio">
+    <h1 class="giant-title">Tu presencia<br>digital profesional</h1>
+
+  <div class="stage" id="proyectos">
     <div class="ghosts" id="ghosts"></div>
-    <div class="cube" id="cube">
+    <div class="cube" id="cube" tabindex="0" role="slider" aria-label="Cubo interactivo de proyectos. Use las flechas del teclado para rotar, Enter para seleccionar.">
 
       <div class="face front logo-face">
         <img src="logo.png" alt="EJWeb" class="logo-img" draggable="false">
@@ -26,49 +48,67 @@
 
       <div class="face right" data-url="https://ejemplo.com/proyecto-2">
         <div class="chrome"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">sitio-2</span></div>
-        <video draggable="false" autoplay muted loop playsinline src="videos/sitio2.mp4"></video>
+        <video draggable="false" autoplay muted loop playsinline preload="none" loading="lazy" poster="videos/posters/poster-right.jpg" src="videos/sitio2.mp4" aria-label="Video preview del proyecto 2 (sitio-2)"></video>
         <div class="visit"><span>Visitar sitio ↗</span></div>
       </div>
 
       <div class="face back" data-url="https://ejemplo.com/proyecto-1">
         <div class="chrome"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">sitio-1</span></div>
-        <video draggable="false" autoplay muted loop playsinline src="videos/sitio1.mp4"></video>
+        <video draggable="false" autoplay muted loop playsinline preload="none" loading="lazy" poster="videos/posters/poster-front.jpg" src="videos/sitio1.mp4" aria-label="Video preview del proyecto 1 (sitio-1)"></video>
         <div class="visit"><span>Visitar sitio ↗</span></div>
       </div>
 
       <div class="face left" data-url="https://ejemplo.com/proyecto-3">
         <div class="chrome"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">sitio-3</span></div>
-        <video draggable="false" autoplay muted loop playsinline src="videos/sitio3.mp4"></video>
+        <video draggable="false" autoplay muted loop playsinline preload="none" loading="lazy" poster="videos/posters/poster-left.jpg" src="videos/sitio3.mp4" aria-label="Video preview del proyecto 3 (sitio-3)"></video>
         <div class="visit"><span>Visitar sitio ↗</span></div>
       </div>
 
       <div class="face top" data-url="https://ejemplo.com/proyecto-4">
         <div class="chrome"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">sitio-4</span></div>
-        <video draggable="false" autoplay muted loop playsinline src="videos/sitio4.mp4"></video>
+        <video draggable="false" autoplay muted loop playsinline preload="none" loading="lazy" poster="videos/posters/poster-top.jpg" src="videos/sitio4.mp4" aria-label="Video preview del proyecto 4 (sitio-4)"></video>
         <div class="visit"><span>Visitar sitio ↗</span></div>
       </div>
 
       <div class="face bottom" data-url="https://ejemplo.com/proyecto-6">
         <div class="chrome"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">evento-F.com</span></div>
-        <video draggable="false" autoplay muted loop playsinline src="https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"></video>
+        <video draggable="false" autoplay muted loop playsinline preload="none" loading="lazy" poster="videos/posters/poster-bottom.jpg" src="https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" aria-label="Video preview del proyecto 6 (evento-F.com)"></video>
         <div class="visit"><span>Visitar sitio ↗</span></div>
       </div>
 
     </div>
   </div>
 
+    <div class="hero-footer-row">
+      <p class="hero-desc">Diseño y creación de sitios web a medida. Cada cara del cubo es un proyecto — arrastralo para explorar.</p>
+      <p class="hero-meta">*DESDE 2026<br>CÓRDOBA, ARGENTINA</p>
+    </div>
+  </section>
+
   <p class="hint">Los videos son clips públicos de prueba &mdash; reemplazalos por grabaciones cortas de tus propios sitios (<b>screen recording</b> de cada landing, 5&ndash;8s, en loop).</p>
 
-  <footer>
-    <a href="https://wa.me/5490000000000" target="_blank" rel="noopener" class="badge-3d" aria-label="Escribinos por WhatsApp">
-      <canvas id="wa-canvas" width="74" height="74"></canvas>
+  <footer id="contacto">
+    <a href="https://wa.me/5490000000000" target="_blank" rel="noopener noreferrer" class="badge-3d" aria-label="Escribinos por WhatsApp">
+      <canvas id="wa-canvas" width="74" height="74" role="img" aria-hidden="true"></canvas>
+      <svg class="badge-fallback" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12.04 2.01C6.48 2.01 2 6.23 2 11.42c0 2.03.78 3.88 2.04 5.27-.15.6-.24 1.23-.24 1.9 0 1 .3 2.04.85 2.88.45.7.1 1.63-.2 1.96-.32.33-.96.55-1.45.4-.49-.16-1.29-.7-1.04-1.53.23-.76 1.04-1.09 1.44-1.04.4.04 1 .06 1.64-.01 2.03-.6 3.87-1.93 5.06-3.64.8-.8 1.5-1.82 1.5-2.98 0-.7-.1-1.4-.2-2.1.5-.3.9-.78 1.28-1.27.5-.7.9-1.46 1.15-2.28-.3-.24-.65-.44-1.02-.58C18.08 3.08 15.04 2.01 12.04 2.01z"/>
+      </svg>
     </a>
-    <a href="https://instagram.com/tu_usuario" target="_blank" rel="noopener" class="badge-3d" aria-label="Seguinos en Instagram">
-      <canvas id="ig-canvas" width="74" height="74"></canvas>
+    <a href="https://instagram.com/tu_usuario" target="_blank" rel="noopener noreferrer" class="badge-3d" aria-label="Seguimos en Instagram">
+      <canvas id="ig-canvas" width="74" height="74" role="img" aria-hidden="true"></canvas>
+      <svg class="badge-fallback" viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="3" y="3" width="18" height="18" rx="5" ry="5"/>
+        <circle cx="12" cy="12" r="4"/>
+        <circle cx="17" cy="7" r="1"/>
+      </svg>
     </a>
+
+    <button id="sound-toggle" aria-label="Silenciar sonido" aria-pressed="false" class="sound-toggle">
+      <span class="sound-icon" aria-hidden="true">🔊</span>
+    </button>
   </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="script.js?v=10"></script>
+<script src="script.js?v=11"></script>
 </body>
 </html>
